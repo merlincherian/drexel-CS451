@@ -1,7 +1,7 @@
-public class CheckerBoard {
+public class MoveValidator {
     private String[][] board = new String[8][8];
 
-    public CheckerBoard(){
+    public MoveValidator(){
         initBoard();
     }
 
