@@ -29,6 +29,7 @@ public class MoveValidator {
             board[i] = buildRow(board[i],"w",(i + 1) % 2 );
             board[7-i] = buildRow(board[7-i],"r", i %2);
         }
+        System.out.println(board);
     }
 
     /*
@@ -65,7 +66,7 @@ public class MoveValidator {
 
         //Get opposite player
         if(player.equals("r")){
-            op = "w";
+            op = "b";
         } else {
             op = "r";
         }
@@ -152,5 +153,9 @@ public class MoveValidator {
             System.out.println(line + "|");
             System.out.println(footer);
         }
+    }
+
+    public void printIt(String str){
+        System.out.println(str);
     }
 }
