@@ -13,7 +13,6 @@ public class MoveValidator {
         @return a String[] which has every other place filled in with color starting from start
      */
     private String[] buildRow(String[] row, String color, int start){
-        //
         String[] tmprow = row;
         for(int i = start; i < 8; i+=2){
             tmprow[i] = color;
@@ -26,8 +25,8 @@ public class MoveValidator {
      */
     private void initBoard(){
         for(int i = 0; i < 3; i++){
-            board[i] = buildRow(board[i],"w",(i + 1) % 2 );
-            board[7-i] = buildRow(board[7-i],"r", i %2);
+            board[i] = buildRow(board[i],"r",(i + 1) % 2 );
+            board[7-i] = buildRow(board[7-i],"b", i %2);
         }
         System.out.println(board);
     }
@@ -71,7 +70,7 @@ public class MoveValidator {
             op = "r";
         }
 
-        String midPoint = this.board[yend + ydir][xend + xdir];
+        String midPoint = this.board[ystart + ydir][xstart + xdir];
         if(midPoint != null){
             return midPoint.equals(op);
         }
@@ -104,13 +103,15 @@ public class MoveValidator {
             return false;
         }
 
-        //If move isn't diagonal fail move attempt
-        if(!diagonal(xstart, ystart, xend, yend)){
-            return false;
-        }
+
 
         //If jumping check square being jumped for opposite player color
-        if(Math.abs(xstart - xend) == 2){
+        if(Math.abs(xstart - xend) == 1){
+            //If move isn't diagonal fail move attempt
+            if(!diagonal(xstart, ystart, xend, yend)){
+                return false;
+            }
+        } else {
             if(!checkJump(player, xstart, ystart, xend, yend)){
                 return false;
             }
@@ -134,7 +135,7 @@ public class MoveValidator {
         if(checkJump(player, xstart, ystart, xend, yend)){
             int xdir = (xend - xstart) / 2;
             int ydir = (yend - ystart) / 2;
-            this.board[yend + ydir][xend + xdir] = null;
+            this.board[ystart + ydir][xstart + xdir] = null;
         }
         this.board[yend][xend] = player;
     }
