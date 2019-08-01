@@ -78,6 +78,23 @@ public class MoveValidator {
     }
 
     /*
+        Assuming "b" starts at the bottom and "r" at the top return if a piece is moving backwards or not.
+        @param player, "r" or "w" for who is moving
+        @param xstart, x value where move is starting from
+        @param ystart, y value where move is starting from
+        @param xend, x value where move is going to
+        @param yend, y value where move is going to
+        @return true if move is going backwards else false
+     */
+    public boolean isMoveBackwards(String player, int xstart, int ystart, int xend, int yend){
+        if(player.equals("b")){
+            return (yend - ystart) > 0;
+        } else {
+            return (yend - ystart) < 0;
+        }
+    }
+
+    /*
         Main funciton that handles calling helpers and quick checks to validate a move by player
         @param player, "r" or "w" for who is moving
         @param xstart, x value where move is starting from
@@ -92,7 +109,6 @@ public class MoveValidator {
             return false;
         }
 
-
         //If player doesn't have a piece on start square fail move attempt
         if(!this.board[ystart][xstart].equals(player)){
             return false;
@@ -103,7 +119,12 @@ public class MoveValidator {
             return false;
         }
 
-
+        //Piece can only move backwards if it is a king
+        if(isMoveBackwards(player, xstart, ystart, xend, yend)){
+            if(!player.contains("k")){
+                return false;
+            }
+        }
 
         //If jumping check square being jumped for opposite player color
         if(Math.abs(xstart - xend) == 1){

@@ -84,7 +84,12 @@ public class Checkers extends Application implements MoveListener {
     }
 
     public boolean checkMove(String player, int xstart, int ystart, int xend, int yend) {
-        return validator.validateMove(player, xstart, ystart, xend, yend);
+        if(validator.validateMove(player, xstart, ystart, xend, yend)){
+
+            validator.applyMove(player, xstart, ystart, xend, yend);
+            return true;
+        }
+        return false;
     }
 
     public static void main(String[] args){

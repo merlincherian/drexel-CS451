@@ -57,12 +57,11 @@ public class Piece extends StackPane {
             currX = e.getSceneX()- e.getX();
             currY = e.getSceneY() - e.getY();
 
-
             String player = type.getColor();
-            int ystart = (int)(offsetY-e.getY())/100;
-            int xstart = (int)(offsetX-e.getX())/100;
-            int xend = (int)(e.getSceneX()-e.getX())/100;
-            int yend = (int)(Math.ceil(e.getSceneY()-e.getY()))/100;
+            int ystart = (int)(offsetY)/100;
+            int xstart = (int)(offsetX)/100;
+            int xend = (int)(e.getSceneX())/100;
+            int yend = (int)(e.getSceneY())/100;
 
             System.out.println(xstart);
             System.out.println(ystart);
