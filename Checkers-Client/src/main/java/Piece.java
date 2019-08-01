@@ -56,14 +56,25 @@ public class Piece extends StackPane {
         setOnMouseReleased(e -> {
             currX = e.getSceneX()- e.getX();
             currY = e.getSceneY() - e.getY();
-            System.out.println(currX);
-            System.out.println(e.getSceneX());
-            System.out.println(e.getX());
+
+
             String player = type.getColor();
+            int ystart = (int)(offsetY-e.getY())/100;
+            int xstart = (int)(offsetX-e.getX())/100;
+            int xend = (int)(e.getSceneX()-e.getX())/100;
+            int yend = (int)(Math.ceil(e.getSceneY()-e.getY()))/100;
+
+            System.out.println(xstart);
+            System.out.println(ystart);
+            System.out.println(xend);
+            System.out.println(yend);
+
             for (MoveListener hl : listeners)
                 //TODO FIX THE values for xstart, ystart, xend, yend
-                if(hl.checkMove(player, 0, 0, 1, 1)){
+                if(hl.checkMove(player, xstart, ystart, xend, yend)){
                     System.out.println("Returned True");
+                } else{
+                    System.out.println("Returned False");
                 };
         });
 
