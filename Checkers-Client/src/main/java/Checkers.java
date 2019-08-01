@@ -76,6 +76,10 @@ public class Checkers extends Application implements MoveListener {
         return piece;
     }
 
+    public void remove_piece(Piece piece){
+        pieces.getChildren().remove(piece);
+    }
+
     public void start(Stage primaryStage) throws Exception{
         Scene scene = new Scene(createContent());
         primaryStage.setTitle("My checkers game");
