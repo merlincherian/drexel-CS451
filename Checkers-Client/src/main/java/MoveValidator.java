@@ -119,6 +119,26 @@ public class MoveValidator {
     }
 
     /*
+        apply a move to the current board, meant to be called after validateMove returns true for given move
+        @param player, "r" or "w" for who is moving
+        @param xstart, x value where move is starting from
+        @param ystart, y value where move is starting from
+        @param xend, x value where move is going to
+        @param yend, y value where move is going to
+     */
+    public void applyMove(String player, int xstart, int ystart, int xend, int yend){
+        this.board[ystart][xstart] = null;
+
+        //if the move is a jump set the piece being jumped to null
+        if(checkJump(player, xstart, ystart, xend, yend)){
+            int xdir = (xend - xstart) / 2;
+            int ydir = (yend - ystart) / 2;
+            this.board[yend + ydir][xend + xdir] = null;
+        }
+        this.board[yend][xend] = player;
+    }
+
+    /*
         helper to print current board to screen for debugging. prints board with "r", "w" or " ".
      */
     public void displayBoard(){
