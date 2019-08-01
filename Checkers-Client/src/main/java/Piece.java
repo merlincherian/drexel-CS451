@@ -4,8 +4,15 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Ellipse;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Piece extends StackPane {
+
+    private List<MoveListener> listeners = new ArrayList<MoveListener>();
 
     public static final int TILE_SIZE = 100;
     private PieceType type;
@@ -49,11 +56,20 @@ public class Piece extends StackPane {
         setOnMouseReleased(e -> {
             currX = e.getSceneX()- e.getX();
             currY = e.getSceneY() - e.getY();
+            System.out.println(currX);
+            System.out.println(e.getSceneX());
+            System.out.println(e.getX());
+            String player = type.getColor();
+            for (MoveListener hl : listeners)
+                //TODO FIX THE values for xstart, ystart, xend, yend
+                if(hl.checkMove(player, 0, 0, 1, 1)){
+                    System.out.println("Returned True");
+                };
         });
 
     }
 
-    public void move_piece(double x, double y){
+    public void move_piece(double x, double y) {
         currX = x * TILE_SIZE;
         currY = y * TILE_SIZE;
         relocate(currX, currY);
@@ -63,4 +79,7 @@ public class Piece extends StackPane {
         return type;
     }
 
+    public void addListener(MoveListener toAdd) {
+        listeners.add(toAdd);
+    }
 }
