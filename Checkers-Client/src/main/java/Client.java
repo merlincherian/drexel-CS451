@@ -42,27 +42,12 @@ public class Client{
 		}
 	}
 
-	private boolean isPortInUse(String host, int port){
-		try{
-			Socket s = new Socket(host, port);
-			s.close();
-			return false;
-		}
-		catch(Exception ex){
-			return true;
-		}
-	}
 
 	public static void main(String args[]){
-     // while (isPortInUse(host, port)){
-		//	port += 1;
-		 // }
-		  //get the IP address of remote server 
-		  //InetAddress host = InetAddress.getByName();
 			System.out.println("Please enter the ip address given by server");
 			Scanner in = new Scanner(System.in);
 			host = in.nextLine();
-			System.out.println("Please enter the port given by server");
+			System.out.println("Please enter the port number given by server");
 			String p = in.nextLine();
 			port = Integer.parseInt(p);
 			Client client = new Client(host, port);
