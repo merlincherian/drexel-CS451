@@ -1,23 +1,22 @@
 import java.net.*;
 import java.io.*;
+import java.util.Random;
 
 public class Server{
 	private Socket socket = null;
-	private ServerSocket server = null;
+	private static ServerSocket server = null;
 	private DataInputStream in = null;
-	private InetAddress ip = null;
-	private int port;
+	private String ip;
 
 	public Server (int port){
 		try{
-			server = new ServerSocket(port);
 			ip = InetAddress.getLocalHost().getHostAddress();
-			System.out.println("server started");
+			System.out.println("Server started");
 			System.out.println("Use IP address: " + ip);
-			System.out.println("Use port: 5000");
-			System.out.println("waiting for client...");
+			System.out.println("Use port: " + port);
+			System.out.println("Waiting for client...");
 			socket = server.accept();
-			System.out.println("client accepted");
+			System.out.println("Client accepted");
 			in = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
 			String line = "";
 			while (!line.equals("Over")){
@@ -37,21 +36,28 @@ public class Server{
 				System.out.println(ex);
 			}
 	}
-		private int createPortOne(String address){
+		//generates a random port number between 48620 and 49150
+		private static int createPortOne(String address){
+			Random rand = new Random();
+			int port = 0;
+			port = rand.nextInt(49150-48620) + 48620;
 			try{
-				port = rand.nextInt(65500);
-				Socket s = new Socket(address, port);
-				s.close();
+				server  = new ServerSocket(port);
 			}
 			catch(Exception ex){
 				System.out.println("Port is taken, another one is being generated");
-				port += 1;
-				createPortOne(address, port);
+				createPortOne(address);
 			}
+			return port;
 		}
 		public static void main(String args[]){
-			String adr = InetAddress.getLocalHost().getHostAddress();
-			int port1 = createPortOne(adr);
-			Server server = new Server(port1);
+			try{
+				String adr = InetAddress.getLocalHost().getHostAddress();
+				int port1 = createPortOne(adr);
+				Server server = new Server(port1);
+			}
+			catch (Exception ex){
+				System.out.println(ex);
 		}
 	}
+}
