@@ -13,6 +13,12 @@ public class Client{
 		try{
 			socket = new Socket(address, port);
 			System.out.println("Connected");
+			new Thread() {
+				@Override
+				public void run() {
+					javafx.application.Application.launch(Checkers.class);
+				}
+			}.start();
 			input = new DataInputStream(System.in);
 			output = new DataOutputStream(socket.getOutputStream());
 		}
