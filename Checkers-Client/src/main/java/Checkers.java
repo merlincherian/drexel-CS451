@@ -37,7 +37,7 @@ public class Checkers extends Application implements MoveListener {
         for (int y = 0; y < HEIGHT; y++) {
             for (int x = 0; x < WIDTH; x++) {
                 Tile tile = new Tile((x + y) % 2 == 0, x, y);
-
+                board[x][y] = tile;
                 tiles.getChildren().add(tile);
                 Piece piece = null;
                 if (y <= 2 && (x + y) % 2 != 0) {
