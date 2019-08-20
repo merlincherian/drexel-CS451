@@ -57,26 +57,20 @@ public class Checkers extends Application implements MoveListener {
             }
         }
         return root;
-//        HBox main = new HBox(root, mycontent());
-//        return main;
     }
-
-//    private Parent mycontent(){
-//        StackPane root = new StackPane();
-//        root.setPrefSize(200, HEIGHT*2);
-//        StackPane.setAlignment(root,Pos.CENTER); //set it to the Center Left(by default it's on the center)
-//        Button button = new Button("Submit Move");
-//        root.setStyle("-fx-background-color: #" + Paint.valueOf("#ACBBB6"));
-//        root.getChildren().addAll(button);
-//        return root;
-//    }
 
     private Piece create_piece(PieceType type, int x, int y) {
         Piece piece = new Piece(type, x, y);
         return piece;
     }
 
-    public void remove_piece(Piece piece){
+    public Tile get_tile(int x, int y){
+        return this.board[x][y];
+    }
+
+
+    public void remove_piece(int x, int y){
+        Piece piece = get_tile(x, y).get_piece();
         pieces.getChildren().remove(piece);
     }
 
@@ -89,7 +83,6 @@ public class Checkers extends Application implements MoveListener {
 
     public boolean checkMove(String player, int xstart, int ystart, int xend, int yend) {
         if(validator.validateMove(player, xstart, ystart, xend, yend)){
-
             validator.applyMove(player, xstart, ystart, xend, yend);
             return true;
         }
