@@ -4,8 +4,15 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Ellipse;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Piece extends StackPane {
+
+    private List<MoveListener> listeners = new ArrayList<MoveListener>();
 
     public static final int TILE_SIZE = 100;
     private PieceType type;
@@ -47,13 +54,32 @@ public class Piece extends StackPane {
         });
 
         setOnMouseReleased(e -> {
-            currX = e.getSceneX()- e.getX();
-            currY = e.getSceneY() - e.getY();
+//            currX = e.getSceneX()- e.getX();
+//            currY = e.getSceneY() - e.getY();
+            String player = type.getColor();
+            int ystart = (int)(offsetY)/100;
+            int xstart = (int)(offsetX)/100;
+            int xend = (int)(e.getSceneX())/100;
+            int yend = (int)(e.getSceneY())/100;
+
+            System.out.println(xstart);
+            System.out.println(ystart);
+            System.out.println(xend);
+            System.out.println(yend);
+
+            for (MoveListener hl : listeners)
+                //TODO FIX THE values for xstart, ystart, xend, yend
+                if(hl.checkMove(player, xstart, ystart, xend, yend)){
+                    currX = e.getSceneX()- e.getX();
+                    currY = e.getSceneY() - e.getY();
+                } else{
+                    relocate(currX, currY);
+                }
         });
 
     }
 
-    public void move_piece(double x, double y){
+    public void move_piece(double x, double y) {
         currX = x * TILE_SIZE;
         currY = y * TILE_SIZE;
         relocate(currX, currY);
@@ -63,4 +89,7 @@ public class Piece extends StackPane {
         return type;
     }
 
+    public void addListener(MoveListener toAdd) {
+        listeners.add(toAdd);
+    }
 }
