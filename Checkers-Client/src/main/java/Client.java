@@ -11,34 +11,36 @@ public class Client{
 
 	public Client(String address, int port){
 		try{
+			Scanner scan = new Scanner(System.in);
 			socket = new Socket(address, port);
 			System.out.println("Connected");
-			input = new DataInputStream(System.in);
+			input = new DataInputStream(socket.getInputStream());
 			output = new DataOutputStream(socket.getOutputStream());
+		
+		//loop performs exchange of information between client and client handler
+		while (true){
+			System.out.println(input.readUTF());
+			String tosend = scan.nextLine();
+			output.writeUTF(tosend);
+
+			//If client sends Over, close connection, break loop
+			if(tosend.equals("Over")){
+				System.out.println("Closing this connection: " + socket);
+				socket.close();
+				System.out.println("Connection close");
+				break;
 		}
-		catch (UnknownHostException ex){
-			System.out.println(ex);
+		//printing info as requested by client
+		String received = input.readUTF();
+		System.out.println(received);
 		}
-		catch (IOException i){
-			System.out.println(i);
-		}
-		String line = "";
-		while(!line.equals("Over")){
-			try{
-				line = input.readLine();
-				output.writeUTF(line);
-			}
-			catch (IOException e){
-				System.out.println(e);
-			}
-		}
-		try{
+		//closing resources
+			scan.close();
 			input.close();
 			output.close();
-			socket.close();
 		}
-		catch(IOException i){
-			System.out.println(i);
+		catch(Exception ex){
+			System.out.println(ex);
 		}
 	}
 
