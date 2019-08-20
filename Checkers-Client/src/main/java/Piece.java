@@ -1,4 +1,5 @@
 import javafx.event.EventHandler;
+import javafx.scene.Node;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
@@ -92,4 +93,14 @@ public class Piece extends StackPane {
     public void addListener(MoveListener toAdd) {
         listeners.add(toAdd);
     }
+
+    public double getCurrX(){
+        return currX;
+    }
+
+    public double getCurrY(){
+        return currY;
+    }
+
+
 }

@@ -12,11 +12,13 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
+import main.java.ValidatorMessage;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.function.Predicate;
 
 public class Checkers extends Application implements MoveListener {
 
@@ -88,9 +90,13 @@ public class Checkers extends Application implements MoveListener {
     }
 
     public boolean checkMove(String player, int xstart, int ystart, int xend, int yend) {
-        if(validator.validateMove(player, xstart, ystart, xend, yend)){
-
+        ValidatorMessage message = validator.validateMove(player, xstart, ystart, xend, yend);
+        if(message.valid){
             validator.applyMove(player, xstart, ystart, xend, yend);
+            if(message.isJump){
+                Predicate<Piece> piecePredicate = piece -> (piece.getCurrX() == (message.jumpedX * 100) && piece.getCurrY() ==(message.jumpedY * 100));
+                pieces.getChildren().removeIf(piecePredicate);
+            }
             return true;
         }
         return false;

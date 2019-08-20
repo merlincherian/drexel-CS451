@@ -1,3 +1,5 @@
+import main.java.ValidatorMessage;
+
 public class MoveValidator {
     private String[][] board = new String[8][8];
 
@@ -57,7 +59,7 @@ public class MoveValidator {
         @param yend, y value where move is going to
         @return true if jump is legal else false
      */
-    private boolean checkJump(String player, int xstart, int ystart, int xend, int yend){
+    private boolean checkJump(String player, int xstart, int ystart, int xend, int yend, ValidatorMessage message){
         int xdir = (xend - xstart) / 2;
         int ydir = (yend - ystart) / 2;
 
@@ -72,6 +74,8 @@ public class MoveValidator {
 
         String midPoint = this.board[ystart + ydir][xstart + xdir];
         if(midPoint != null){
+            message.jumpedY = ystart + ydir;
+            message.jumpedX = xstart + xdir;
             return midPoint.equals(op);
         }
         return false;
@@ -103,26 +107,28 @@ public class MoveValidator {
         @param yend, y value where move is going to
         @return true if none of the branches return false
      */
-    public boolean validateMove(String player, int xstart, int ystart, int xend, int yend){
+    public ValidatorMessage validateMove(String player, int xstart, int ystart, int xend, int yend){
+        ValidatorMessage message = new ValidatorMessage();
+
         //If starting space is null fail move attempt
         if(this.board[ystart][xstart] == null){
-            return false;
+            message.valid = false;
         }
 
         //If player doesn't have a piece on start square fail move attempt
         if(!this.board[ystart][xstart].equals(player)){
-            return false;
+            message.valid = false;
         }
 
         //If target space isn't empty fail move attempt
         if(this.board[yend][xend] != null){
-            return false;
+            message.valid = false;
         }
 
         //Piece can only move backwards if it is a king
         if(isMoveBackwards(player, xstart, ystart, xend, yend)){
             if(!player.contains("k")){
-                return false;
+                message.valid = false;
             }
         }
 
@@ -130,15 +136,18 @@ public class MoveValidator {
         if(Math.abs(xstart - xend) == 1){
             //If move isn't diagonal fail move attempt
             if(!diagonal(xstart, ystart, xend, yend)){
-                return false;
+                message.valid = false;
             }
         } else {
-            if(!checkJump(player, xstart, ystart, xend, yend)){
-                return false;
+            if(!checkJump(player, xstart, ystart, xend, yend, message)){
+                message.valid = false;
             }
         }
 
-        return true;
+        message.valid = true;
+
+
+        return message;
     }
 
     /*
@@ -153,7 +162,7 @@ public class MoveValidator {
         this.board[ystart][xstart] = null;
 
         //if the move is a jump set the piece being jumped to null
-        if(checkJump(player, xstart, ystart, xend, yend)){
+        if(checkJump(player, xstart, ystart, xend, yend, new ValidatorMessage())){
             int xdir = (xend - xstart) / 2;
             int ydir = (yend - ystart) / 2;
             this.board[ystart + ydir][xstart + xdir] = null;
