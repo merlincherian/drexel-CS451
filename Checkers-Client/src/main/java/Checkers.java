@@ -1,4 +1,5 @@
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
@@ -17,8 +18,12 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.Scanner;
 
 public class Checkers extends Application implements MoveListener {
+
+    private boolean isServer = false;
+    private NetworkConnection connection = isServer? createServer(): createClient();
 
     public static final int TILE_SIZE = 100;
     public static final int WIDTH = 8;
@@ -74,11 +79,51 @@ public class Checkers extends Application implements MoveListener {
         pieces.getChildren().remove(piece);
     }
 
+    @Override
+    public void init() throws Exception {
+        Platform.runLater(()->{
+            try {
+                connection.startConnection();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+    }
+
+    @Override
     public void start(Stage primaryStage) throws Exception{
         Scene scene = new Scene(createContent());
         primaryStage.setTitle("My checkers game");
         primaryStage.setScene(scene);
         primaryStage.show();
+//        connection.send_data("WORKING IT IS MERLNI");
+    }
+
+    public MyClient createClient(){
+        System.out.println("Please enter the ip address given by server");
+        Scanner in = new Scanner(System.in);
+        String host = in.nextLine();
+        System.out.println("Please enter the port number given by server");
+        String p = in.nextLine();
+        int port = Integer.parseInt(p);
+        return new MyClient(host, port, data -> {
+            Platform.runLater(() -> {
+
+            });
+        });
+    }
+
+    @Override
+    public void stop() throws Exception {
+        connection.closeConnection();
+    }
+
+    public MyServer createServer(){
+        return new MyServer(55555, data -> {
+            Platform.runLater(() -> {
+
+            });
+        });
     }
 
     public boolean checkMove(String player, int xstart, int ystart, int xend, int yend) {
