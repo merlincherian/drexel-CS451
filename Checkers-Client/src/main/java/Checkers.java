@@ -13,6 +13,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
+import main.java.MoveMessage;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -35,6 +36,7 @@ public class Checkers extends Application implements MoveListener {
     private Group pieces = new Group();
     private MoveValidator validator = new MoveValidator();
     private boolean turn = isServer;
+    private String color = isServer? "b": "r";
 
     private Parent createContent(){
         Pane root = new Pane();
@@ -128,14 +130,14 @@ public class Checkers extends Application implements MoveListener {
         });
     }
 
-    public boolean checkMove(String player, int xstart, int ystart, int xend, int yend) {
-        System.out.println("Received: " + player + "," + xstart);
-        if(validator.validateMove(player, xstart, ystart, xend, yend)){
-            validator.applyMove(player, xstart, ystart, xend, yend);
-            try {
-                connection.send_data("True");
-            } catch (Exception e){
-                e.getStackTrace();
+    public boolean checkMove(MoveMessage move) {
+        if(validator.validateMove(move)){
+            validator.applyMove(move);
+            if(turn){
+                connection.send(move);
+                turn = !turn;
+            } else {
+                //apply other players move to this board
             }
             return true;
         }

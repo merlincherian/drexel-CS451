@@ -1,3 +1,5 @@
+import main.java.MoveMessage;
+
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -29,17 +31,13 @@ public abstract class NetworkConnection {
 
     public void read_data() throws Exception{
         String message = connThread.dis.readUTF();
-        String[] data = message.split(",");
-
-        for(MoveListener h1: listeners)
-            if(h1.checkMove(data[0], Integer.parseInt(data[1]), Integer.parseInt(data[2]), Integer.parseInt(data[3]), Integer.parseInt(data[4])))
-            {
-                System.out.println("True");
-            }
     }
 
     public Serializable read() throws Exception{
-        return (Serializable) connThread.in.readObject();
+        MoveMessage obj = (MoveMessage) connThread.in.readObject();
+        for(MoveListener h1: listeners)
+            h1.checkMove(obj);
+        return obj;
     }
 
 

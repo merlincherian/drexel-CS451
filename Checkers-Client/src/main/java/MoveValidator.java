@@ -1,3 +1,6 @@
+package main.java;
+import main.java.MoveMessage;
+
 public class MoveValidator {
     private String[][] board = new String[8][8];
 
@@ -57,22 +60,29 @@ public class MoveValidator {
         @param yend, y value where move is going to
         @return true if jump is legal else false
      */
-    private boolean checkJump(String player, int xstart, int ystart, int xend, int yend){
-        int xdir = (xend - xstart) / 2;
-        int ydir = (yend - ystart) / 2;
+    private boolean checkJump(MoveMessage move){
+        int xdir = (move.xend - move.xstart) / 2;
+        int ydir = (move.yend - move.ystart) / 2;
 
         String op;
 
         //Get opposite player
-        if(player.equals("r")){
+        if(move.player.equals("r")){
             op = "b";
         } else {
             op = "r";
         }
 
-        String midPoint = this.board[ystart + ydir][xstart + xdir];
+        int xjump = move.xstart + xdir;
+        int yjump = move.ystart + ydir;
+
+        String midPoint = this.board[yjump][xjump];
         if(midPoint != null){
-            return midPoint.equals(op);
+            if(midPoint.equals(op)){
+                move.jump = true;
+                move.yjump = yjump;
+                move.xjump = xjump;
+            }
         }
         return false;
     }
@@ -103,42 +113,42 @@ public class MoveValidator {
         @param yend, y value where move is going to
         @return true if none of the branches return false
      */
-    public boolean validateMove(String player, int xstart, int ystart, int xend, int yend){
+    public boolean validateMove(MoveMessage move){
         //If starting space is null fail move attempt
-        if(this.board[ystart][xstart] == null){
-            return false;
+        if(this.board[move.ystart][move.xstart] == null){
+            move.valid = false;
         }
 
         //If player doesn't have a piece on start square fail move attempt
-        if(!this.board[ystart][xstart].equals(player)){
-            return false;
+        if(!this.board[move.ystart][move.xstart].equals(move.player)){
+            move.valid = false;
         }
 
         //If target space isn't empty fail move attempt
-        if(this.board[yend][xend] != null){
-            return false;
+        if(this.board[move.yend][move.xend] != null){
+             move.valid = false;
         }
 
         //Piece can only move backwards if it is a king
-        if(isMoveBackwards(player, xstart, ystart, xend, yend)){
-            if(!player.contains("k")){
-                return false;
+        if(isMoveBackwards(move.player, move.xstart, move.ystart, move.xend, move.yend)){
+            if(!move.player.contains("k")){
+                move.valid = false;
             }
         }
 
         //If jumping check square being jumped for opposite player color
-        if(Math.abs(xstart - xend) == 1){
+        if(Math.abs(move.xstart - move.xend) == 1){
             //If move isn't diagonal fail move attempt
-            if(!diagonal(xstart, ystart, xend, yend)){
-                return false;
+            if(!diagonal(move.xstart, move.ystart, move.xend, move.yend)){
+                move.valid = false;
             }
         } else {
-            if(!checkJump(player, xstart, ystart, xend, yend)){
-                return false;
+            if(!checkJump(move)){
+                move.valid = false;
             }
         }
 
-        return true;
+        return move.valid;
     }
 
     /*
@@ -149,16 +159,16 @@ public class MoveValidator {
         @param xend, x value where move is going to
         @param yend, y value where move is going to
      */
-    public void applyMove(String player, int xstart, int ystart, int xend, int yend){
-        this.board[ystart][xstart] = null;
+    public void applyMove(MoveMessage move){
+        this.board[move.ystart][move.xstart] = null;
 
         //if the move is a jump set the piece being jumped to null
-        if(checkJump(player, xstart, ystart, xend, yend)){
-            int xdir = (xend - xstart) / 2;
-            int ydir = (yend - ystart) / 2;
-            this.board[ystart + ydir][xstart + xdir] = null;
+        if(checkJump(move)){
+            int xdir = (move.xend - move.xstart) / 2;
+            int ydir = (move.yend - move.ystart) / 2;
+            this.board[move.ystart + ydir][move.xstart + xdir] = null;
         }
-        this.board[yend][xend] = player;
+        this.board[move.yend][move.xend] = move.player;
     }
 
     /*
