@@ -22,7 +22,7 @@ import java.util.Scanner;
 
 public class Checkers extends Application implements MoveListener {
 
-    private boolean isServer = false;
+    private boolean isServer = true;
     private NetworkConnection connection = isServer? createServer(): createClient();
 
     public static final int TILE_SIZE = 100;
@@ -34,6 +34,7 @@ public class Checkers extends Application implements MoveListener {
     private Group tiles = new Group();
     private Group pieces = new Group();
     private MoveValidator validator = new MoveValidator();
+    private boolean turn = isServer;
 
     private Parent createContent(){
         Pane root = new Pane();
@@ -96,6 +97,7 @@ public class Checkers extends Application implements MoveListener {
         primaryStage.setTitle("My checkers game");
         primaryStage.setScene(scene);
         primaryStage.show();
+        connection.addListener(this);
 //        connection.send_data("WORKING IT IS MERLNI");
     }
 
@@ -127,12 +129,19 @@ public class Checkers extends Application implements MoveListener {
     }
 
     public boolean checkMove(String player, int xstart, int ystart, int xend, int yend) {
+        System.out.println("Received: " + player + "," + xstart);
         if(validator.validateMove(player, xstart, ystart, xend, yend)){
             validator.applyMove(player, xstart, ystart, xend, yend);
+            try {
+                connection.send_data("True");
+            } catch (Exception e){
+                e.getStackTrace();
+            }
             return true;
         }
         return false;
     }
+
 
     public static void main(String[] args){
         launch(args);
