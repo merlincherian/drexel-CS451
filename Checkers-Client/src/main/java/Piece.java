@@ -20,7 +20,7 @@ public class Piece extends StackPane {
     public PieceType type;
     private double offsetX, offsetY;
     private double currX, currY;
-    public boolean canMove;
+    public boolean canMove = true;
 
     public Piece(PieceType type, int x, int y){
         this.type = type;
