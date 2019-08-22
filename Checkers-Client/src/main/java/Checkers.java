@@ -131,15 +131,28 @@ public class Checkers extends Application implements MoveListener {
     public boolean checkMove(MoveMessage move) {
         if(validator.validateMove(move)){
             validator.applyMove(move);
+            validator.displayBoard();
             if(turn){
                 try {
                     connection.send(move);
-                } catch (Exception e) {
-                    e.printStackTrace();
+                } catch (Exception e){
+                    System.out.println(e);
                 }
                 turn = !turn;
             } else {
+                remove_piece(move.xstart, move.ystart);
+                Piece piece;
+                if(move.player == "b"){
+                    piece = create_piece(PieceType.DARK, move.xend, move.yend);
+                } else {
+                    piece = create_piece(PieceType.LIGHT, move.xend, move.yend);
+                }
+                board[move.xend][move.yend].set_piece(piece);
+                pieces.getChildren().add(piece);
                 //apply other players move to this board
+            }
+            if(move.jump){
+                remove_piece(move.xjump, move.yjump);
             }
             return true;
         }
