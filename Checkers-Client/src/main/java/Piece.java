@@ -17,9 +17,10 @@ public class Piece extends StackPane {
     private List<MoveListener> listeners = new ArrayList<MoveListener>();
 
     public static final int TILE_SIZE = 100;
-    private PieceType type;
+    public PieceType type;
     private double offsetX, offsetY;
     private double currX, currY;
+    public boolean canMove;
 
     public Piece(PieceType type, int x, int y){
         this.type = type;
@@ -46,40 +47,42 @@ public class Piece extends StackPane {
 
         getChildren().addAll(shadow, coin);
 
-        setOnMousePressed(e -> {
-            offsetX = e.getSceneX();
-            offsetY = e.getSceneY();
-        });
+        if(canMove) {
+            setOnMousePressed(e -> {
+                offsetX = e.getSceneX();
+                offsetY = e.getSceneY();
+            });
 
-        setOnMouseDragged(e -> {
-            relocate(e.getSceneX() - offsetX + currX, e.getSceneY() - offsetY + currY);
-        });
+            setOnMouseDragged(e -> {
+                relocate(e.getSceneX() - offsetX + currX, e.getSceneY() - offsetY + currY);
+            });
 
-        setOnMouseReleased(e -> {
+            setOnMouseReleased(e -> {
 //            currX = e.getSceneX()- e.getX();
 //            currY = e.getSceneY() - e.getY();
-            String player = type.getColor();
-            int ystart = (int)(offsetY)/100;
-            int xstart = (int)(offsetX)/100;
-            int xend = (int)(e.getSceneX())/100;
-            int yend = (int)(e.getSceneY())/100;
+                String player = type.getColor();
+                int ystart = (int) (offsetY) / 100;
+                int xstart = (int) (offsetX) / 100;
+                int xend = (int) (e.getSceneX()) / 100;
+                int yend = (int) (e.getSceneY()) / 100;
 
-            System.out.println(xstart);
-            System.out.println(ystart);
-            System.out.println(xend);
-            System.out.println(yend);
+                System.out.println(xstart);
+                System.out.println(ystart);
+                System.out.println(xend);
+                System.out.println(yend);
 
-            MoveMessage move = new MoveMessage(player, xstart, ystart, xend, yend);
+                MoveMessage move = new MoveMessage(player, xstart, ystart, xend, yend);
 
-            for (MoveListener hl : listeners)
-                //TODO FIX THE values for xstart, ystart, xend, yend
-                if(hl.checkMove(move)){
-                    currX = e.getSceneX()- e.getX();
-                    currY = e.getSceneY() - e.getY();
-                } else{
-                    relocate(currX, currY);
-                }
-        });
+                for (MoveListener hl : listeners)
+                    //TODO FIX THE values for xstart, ystart, xend, yend
+                    if (hl.checkMove(move)) {
+                        currX = e.getSceneX() - e.getX();
+                        currY = e.getSceneY() - e.getY();
+                    } else {
+                        relocate(currX, currY);
+                    }
+            });
+        }
 
     }
 
