@@ -13,8 +13,6 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
-import main.java.MoveMessage;
-
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -23,7 +21,7 @@ import java.util.Scanner;
 
 public class Checkers extends Application implements MoveListener {
 
-    private boolean isServer = true;
+    private boolean isServer = false;
     private NetworkConnection connection = isServer? createServer(): createClient();
 
     public static final int TILE_SIZE = 100;
@@ -49,11 +47,11 @@ public class Checkers extends Application implements MoveListener {
                 tiles.getChildren().add(tile);
                 Piece piece = null;
                 if (y <= 2 && (x + y) % 2 != 0) {
-                    piece = create_piece(PieceType.LIGHT, x, y);
+                    piece = create_piece(PieceType.LIGHT, x, y, isServer);
                 }
 
                 if (y >= 5 && (x + y) % 2 != 0) {
-                    piece = create_piece(PieceType.DARK, x, y);
+                    piece = create_piece(PieceType.DARK, x, y, isServer);
                 }
 
                 if (piece != null) {
@@ -67,8 +65,8 @@ public class Checkers extends Application implements MoveListener {
         return root;
     }
 
-    private Piece create_piece(PieceType type, int x, int y) {
-        Piece piece = new Piece(type, x, y);
+    private Piece create_piece(PieceType type, int x, int y, boolean isServer) {
+        Piece piece = new Piece(type, x, y, isServer);
         return piece;
     }
 
@@ -134,7 +132,11 @@ public class Checkers extends Application implements MoveListener {
         if(validator.validateMove(move)){
             validator.applyMove(move);
             if(turn){
-                connection.send(move);
+                try {
+                    connection.send(move);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 turn = !turn;
             } else {
                 //apply other players move to this board

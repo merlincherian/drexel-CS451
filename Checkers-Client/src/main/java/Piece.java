@@ -4,7 +4,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Ellipse;
-import main.java.MoveMessage;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -17,13 +16,25 @@ public class Piece extends StackPane {
     private List<MoveListener> listeners = new ArrayList<MoveListener>();
 
     public static final int TILE_SIZE = 100;
-    public PieceType type;
+    private PieceType type;
     private double offsetX, offsetY;
     private double currX, currY;
-    public boolean canMove;
+    private boolean canMove;
 
-    public Piece(PieceType type, int x, int y){
+    public Piece(PieceType type, int x, int y, boolean isServer){
         this.type = type;
+        if(type == PieceType.DARK){
+            if(isServer)
+            canMove = true;
+            else
+            canMove = false;
+        }
+        if(type == PieceType.LIGHT){
+            if(isServer)
+                canMove = false;
+            else
+                canMove = true;
+        }
         move_piece(x, y);
 
         Ellipse shadow = new Ellipse(TILE_SIZE * 0.3125, TILE_SIZE * 0.26);
@@ -94,6 +105,10 @@ public class Piece extends StackPane {
 
     public PieceType get_type() {
         return type;
+    }
+
+    public void setCanMove(boolean bool){
+        canMove = bool;
     }
 
     public void addListener(MoveListener toAdd) {
