@@ -4,6 +4,8 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Ellipse;
+import main.java.MoveMessage;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -67,9 +69,11 @@ public class Piece extends StackPane {
             System.out.println(xend);
             System.out.println(yend);
 
+            MoveMessage move = new MoveMessage(player, xstart, ystart, xend, yend);
+
             for (MoveListener hl : listeners)
                 //TODO FIX THE values for xstart, ystart, xend, yend
-                if(hl.checkMove(player, xstart, ystart, xend, yend)){
+                if(hl.checkMove(move)){
                     currX = e.getSceneX()- e.getX();
                     currY = e.getSceneY() - e.getY();
                 } else{
