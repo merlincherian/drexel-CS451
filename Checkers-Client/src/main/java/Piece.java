@@ -19,11 +19,7 @@ public class Piece extends StackPane {
     private PieceType type;
     private double offsetX, offsetY;
     private double currX, currY;
-<<<<<<< HEAD
     private boolean canMove;
-=======
-    public boolean canMove = true;
->>>>>>> dbe55161bfdca94737f06b99202c458492ad2507
 
     public Piece(PieceType type, int x, int y, boolean isServer){
         this.type = type;
