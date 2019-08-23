@@ -21,7 +21,7 @@ import java.util.Scanner;
 
 public class Checkers extends Application implements MoveListener {
 
-    private boolean isServer = true;
+    private boolean isServer = false;
     private NetworkConnection connection = isServer? createServer(): createClient();
 
     public static final int TILE_SIZE = 100;
@@ -140,13 +140,14 @@ public class Checkers extends Application implements MoveListener {
                 } catch (Exception e) {
                     System.out.println(e);
                 }
+            } else {
+                Piece piece = get_tile(move.xstart, move.ystart).get_piece();
+                piece.move_piece(move.xend, move.yend);
+                Tile start = get_tile(move.xstart, move.ystart);
+                start.set_piece(null);
+                Tile end = get_tile(move.xend, move.yend);
+                end.set_piece(piece);
             }
-            Piece piece = get_tile(move.xstart, move.ystart).get_piece();
-            piece.move_piece(move.xend, move.yend);
-            Tile start = get_tile(move.xstart, move.ystart);
-            start.set_piece(null);
-            Tile end = get_tile(move.xend, move.yend);
-            end.set_piece(piece);
             turn = !turn;
             if(move.jump){
                 remove_piece(move.xjump, move.yjump);
