@@ -21,7 +21,7 @@ import java.util.Scanner;
 
 public class Checkers extends Application implements MoveListener {
 
-    private boolean isServer = true;
+    private boolean isServer = false;
     private NetworkConnection connection = isServer? createServer(): createClient();
 
     public static final int TILE_SIZE = 100;
@@ -79,7 +79,7 @@ public class Checkers extends Application implements MoveListener {
         Tile target = get_tile(x, y);
         Piece piece = target.get_piece();
         target.set_piece(null);
-        pieces.getChildren().remove(piece);
+        piece.setVisible(false);
     }
 
     @Override
@@ -135,6 +135,12 @@ public class Checkers extends Application implements MoveListener {
             validator.applyMove(move);
             validator.displayBoard();
             if(turn){
+                Piece piece = get_tile(move.xstart, move.ystart).get_piece();
+                piece.move_piece(move.xend, move.yend);
+                Tile start = get_tile(move.xstart, move.ystart);
+                start.set_piece(null);
+                Tile end = get_tile(move.xend, move.yend);
+                end.set_piece(piece);
                 try {
                     connection.send(move);
                 } catch (Exception e){
