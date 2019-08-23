@@ -80,7 +80,7 @@ public abstract class NetworkConnection {
                 this.socket.setTcpNoDelay(true);
                 while (true){
                     try{
-                        read_data();
+                        read();
                     } catch (Exception e){
                         System.out.println(e);
                     }

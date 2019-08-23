@@ -148,6 +148,7 @@ public class Checkers extends Application implements MoveListener {
                 start.set_piece(null);
                 Tile end = get_tile(move.xend, move.yend);
                 end.set_piece(piece);
+                turn = !turn;
             }
             if(move.jump){
                 remove_piece(move.xjump, move.yjump);
