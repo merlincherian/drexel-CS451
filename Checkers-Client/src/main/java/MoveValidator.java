@@ -1,3 +1,4 @@
+
 public class MoveValidator {
     private String[][] board = new String[8][8];
 
