@@ -21,7 +21,7 @@ import java.util.Scanner;
 
 public class Checkers extends Application implements MoveListener {
 
-    private boolean isServer = false;
+    private boolean isServer = true;
     private NetworkConnection connection = isServer? createServer(): createClient();
 
     public static final int TILE_SIZE = 100;
@@ -76,7 +76,9 @@ public class Checkers extends Application implements MoveListener {
 
 
     public void remove_piece(int x, int y){
-        Piece piece = get_tile(x, y).get_piece();
+        Tile target = get_tile(x, y);
+        Piece piece = target.get_piece();
+        target.set_piece(null);
         pieces.getChildren().remove(piece);
     }
 
@@ -140,16 +142,12 @@ public class Checkers extends Application implements MoveListener {
                 }
                 turn = !turn;
             } else {
-                remove_piece(move.xstart, move.ystart);
-                Piece piece;
-                if(move.player == "b"){
-                    piece = create_piece(PieceType.DARK, move.xend, move.yend);
-                } else {
-                    piece = create_piece(PieceType.LIGHT, move.xend, move.yend);
-                }
-                board[move.xend][move.yend].set_piece(piece);
-                pieces.getChildren().add(piece);
-                //apply other players move to this board
+                Piece piece = get_tile(move.xstart, move.ystart).get_piece();
+                piece.move_piece(move.xend, move.yend);
+                Tile start = get_tile(move.xstart, move.ystart);
+                start.set_piece(null);
+                Tile end = get_tile(move.xend, move.yend);
+                end.set_piece(piece);
             }
             if(move.jump){
                 remove_piece(move.xjump, move.yjump);
