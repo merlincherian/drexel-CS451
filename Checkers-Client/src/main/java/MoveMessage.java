@@ -1,10 +1,8 @@
-package main.java;
-
 import java.io.Serializable;
 
 public class MoveMessage implements Serializable {
     private static final long serialVersionUID = 1L;
-    public boolean valid;
+    public boolean valid = true;
     public String player;
     public int xstart;
     public int ystart;

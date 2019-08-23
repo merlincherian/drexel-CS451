@@ -1,5 +1,3 @@
-package main.java;
-import main.java.MoveMessage;
 
 public class MoveValidator {
     private String[][] board = new String[8][8];
@@ -82,6 +80,7 @@ public class MoveValidator {
                 move.jump = true;
                 move.yjump = yjump;
                 move.xjump = xjump;
+                return true;
             }
         }
         return false;
