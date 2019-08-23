@@ -134,21 +134,20 @@ public class Checkers extends Application implements MoveListener {
         if(validator.validateMove(move)){
             validator.applyMove(move);
             validator.displayBoard();
-            if(turn){
+            if(turn) {
                 try {
                     connection.send(move);
-                } catch (Exception e){
+                } catch (Exception e) {
                     System.out.println(e);
                 }
-                turn = !turn;
-            } else {
-                Piece piece = get_tile(move.xstart, move.ystart).get_piece();
-                piece.move_piece(move.xend, move.yend);
-                Tile start = get_tile(move.xstart, move.ystart);
-                start.set_piece(null);
-                Tile end = get_tile(move.xend, move.yend);
-                end.set_piece(piece);
             }
+            Piece piece = get_tile(move.xstart, move.ystart).get_piece();
+            piece.move_piece(move.xend, move.yend);
+            Tile start = get_tile(move.xstart, move.ystart);
+            start.set_piece(null);
+            Tile end = get_tile(move.xend, move.yend);
+            end.set_piece(piece);
+            turn = !turn;
             if(move.jump){
                 remove_piece(move.xjump, move.yjump);
             }
