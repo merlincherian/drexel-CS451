@@ -150,6 +150,7 @@ public class Checkers extends Application implements MoveListener {
 			 */
 			this.isServer = true;
 			this.connection = this.createServer();
+			this.turn = this.isServer;
 			window.setScene(this.sceneCheckers);
 			//will open a new window showing Host network info
 			this.createHostInfoWindow();
@@ -171,6 +172,7 @@ public class Checkers extends Application implements MoveListener {
 			this.isServer = false;
 			this.connection = 
 					this.createClientViaLauncer(this.textFieldHostIP.getText(), Integer.parseInt(this.textFieldHostPort.getText()));
+			this.turn = this.isServer;
 			window.setScene(this.sceneCheckers);
 			Platform.runLater(()->{
 	            try {
@@ -211,7 +213,6 @@ public class Checkers extends Application implements MoveListener {
 				button4
 		);	
 		this.sceneLauncher = new Scene(vb);
-		this.turn = this.isServer;
     	
     	/********************************
     	 * Setting up Checkers game scene
@@ -298,6 +299,7 @@ public class Checkers extends Application implements MoveListener {
     }
 
     public boolean checkMove(MoveMessage move) {
+    	this.turn = this.isServer;
         if(validator.validateMove(move)){
             validator.applyMove(move);
             validator.displayBoard();
