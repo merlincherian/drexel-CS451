@@ -57,6 +57,7 @@ public class Checkers extends Application implements MoveListener {
     private Parent createContent(){
     	/* creates initial checkerboard w/ tiles
     	 */
+    	System.out.print("isServer: " + this.isServer);
         Pane root = new Pane();
         root.setPrefSize(WIDTH*TILE_SIZE, HEIGHT*TILE_SIZE);
         root.getChildren().addAll(tiles, pieces);
@@ -86,6 +87,7 @@ public class Checkers extends Application implements MoveListener {
     }
 
     private Piece create_piece(PieceType type, int x, int y, boolean isServer) {
+
         Piece piece = new Piece(type, x, y, isServer);
         return piece;
     }
@@ -94,7 +96,7 @@ public class Checkers extends Application implements MoveListener {
         return this.board[x][y];
     }
 
-    public void remove_piece(int x, int y){
+    public void remove_piece(int x, int y){ 
         Tile target = get_tile(x, y);
         Piece piece = target.get_piece();
         target.set_piece(null);
@@ -149,8 +151,11 @@ public class Checkers extends Application implements MoveListener {
 			 * start a connection. 
 			 */
 			this.isServer = true;
-			this.connection = this.createServer();
 			this.turn = this.isServer;
+			this.connection = this.createServer();	
+			
+			//checkers scene is set so that createContent() isn't called early or duplicated
+			this.sceneCheckers = new Scene(createContent());
 			window.setScene(this.sceneCheckers);
 			//will open a new window showing Host network info
 			this.createHostInfoWindow();
@@ -170,9 +175,12 @@ public class Checkers extends Application implements MoveListener {
 			 * start a connection. 
 			 */
 			this.isServer = false;
+			this.turn = this.isServer;
 			this.connection = 
 					this.createClientViaLauncer(this.textFieldHostIP.getText(), Integer.parseInt(this.textFieldHostPort.getText()));
-			this.turn = this.isServer;
+			
+			//checkers scene is set so that createContent() isn't called early or duplicated
+			this.sceneCheckers = new Scene(createContent());
 			window.setScene(this.sceneCheckers);
 			Platform.runLater(()->{
 	            try {
@@ -185,7 +193,6 @@ public class Checkers extends Application implements MoveListener {
 		});
 		button3.setOnAction(action -> {
 			//button3 - View Application information
-			
 			this.createGeneralInfoWindow();
 		});
 		button4.setOnAction(action -> {
@@ -213,13 +220,11 @@ public class Checkers extends Application implements MoveListener {
 				button4
 		);	
 		this.sceneLauncher = new Scene(vb);
-    	
-    	/********************************
-    	 * Setting up Checkers game scene
-    	 ********************************/
-        this.sceneCheckers = new Scene(createContent());
-        
-        window.setScene(sceneLauncher);
+		
+		//this will duplicate the scene
+		//this.sceneCheckers = new Scene(createContent());
+		
+        window.setScene(this.sceneLauncher);
         window.setTitle("Checkers");
         window.show();
 //        connection.send_data("WORKING IT IS MERLNI");
@@ -271,6 +276,7 @@ public class Checkers extends Application implements MoveListener {
     }
     
     public MyClient createClientViaLauncer(String host, int port) {
+    	this.isServer = false;
     	/* method to make it easier to create
     	 * a client via launcher, to read in
     	 * the host IP and port number at once.
@@ -288,6 +294,7 @@ public class Checkers extends Application implements MoveListener {
     }
 
     public MyServer createServer(){
+    	this.isServer = true;
     	/* Return a server with a 
     	 * default port value (first arg)
     	 */
@@ -299,7 +306,6 @@ public class Checkers extends Application implements MoveListener {
     }
 
     public boolean checkMove(MoveMessage move) {
-    	this.turn = this.isServer;
         if(validator.validateMove(move)){
             validator.applyMove(move);
             validator.displayBoard();
@@ -333,7 +339,7 @@ public class Checkers extends Application implements MoveListener {
         return false;
     }
 
-    public static void main(String[] args){
+    public static void main(String[] args){ 
         launch(args);
     }
 

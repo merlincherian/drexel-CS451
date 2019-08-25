@@ -23,6 +23,7 @@ public class Piece extends StackPane {
 
     public Piece(PieceType type, int x, int y, boolean isServer){
         this.type = type;
+        //determines which color of piece is moveable based on user's net status
         if(type == PieceType.DARK){
             if(isServer)
             canMove = true;
