@@ -1,5 +1,7 @@
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
@@ -7,10 +9,15 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
 import java.io.IOException;
@@ -21,8 +28,13 @@ import java.util.Scanner;
 
 public class Checkers extends Application implements MoveListener {
 
-    private boolean isServer = false;
-    private NetworkConnection connection = isServer? createServer(): createClient();
+    private boolean isServer = true; //user is a (true) host or (false) guest
+    
+    //uses a ternary operation to create a host or guest session on start up
+    //private NetworkConnection connection = isServer? createServer(): createClient();
+    private NetworkConnection connection;
+    
+    public static String gHostIpAddress, gHostPortNumber;
 
     public static final int TILE_SIZE = 100;
     public static final int WIDTH = 8;
@@ -35,8 +47,16 @@ public class Checkers extends Application implements MoveListener {
     private MoveValidator validator = new MoveValidator();
     private boolean turn = isServer;
     private String color = isServer? "b": "r";
+    
+    //public TextFields for button access
+  	public TextField textFieldHostIP = new TextField();
+  	public TextField textFieldHostPort = new TextField();
+  	Stage window;
+	Scene sceneLauncher, sceneCheckers;
 
     private Parent createContent(){
+    	/* creates initial checkerboard w/ tiles
+    	 */
         Pane root = new Pane();
         root.setPrefSize(WIDTH*TILE_SIZE, HEIGHT*TILE_SIZE);
         root.getChildren().addAll(tiles, pieces);
@@ -74,7 +94,6 @@ public class Checkers extends Application implements MoveListener {
         return this.board[x][y];
     }
 
-
     public void remove_piece(int x, int y){
         Tile target = get_tile(x, y);
         Piece piece = target.get_piece();
@@ -82,28 +101,160 @@ public class Checkers extends Application implements MoveListener {
         piece.setVisible(false);
     }
 
-    @Override
-    public void init() throws Exception {
-        Platform.runLater(()->{
-            try {
-                connection.startConnection();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        });
-    }
+    
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-        Scene scene = new Scene(createContent());
-        primaryStage.setTitle("My checkers game");
-        primaryStage.setScene(scene);
-        primaryStage.show();
-        connection.addListener(this);
+    	/* required JavaFX call to set the current scene
+    	 */
+    	this.window = primaryStage;
+    	/********************************
+    	 * Launcher scene 
+    	 ********************************/
+
+		//set up menuBar
+		MenuBar mb = new MenuBar();
+		//create menu(s)
+		Menu menu1 = new Menu("File");
+		//create menuItems
+		MenuItem m1File = new MenuItem("Exit Application");
+		menu1.getItems().add(m1File);
+		
+		//event handler for menuItems
+		EventHandler<ActionEvent> menuEvent = new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent e) {
+				String mText = ((MenuItem)e.getSource()).getText();
+				//define menu option behavior via if else
+				if(mText.equals("Exit Application")) {
+					System.out.println("Application Closed");
+					System.exit(0);
+				}
+			}	
+        };
+		//add events to menuItems
+		m1File.setOnAction(menuEvent);
+		
+		//create buttons
+		Button button1 = new Button("Host Checkers Game");
+		Button button2 = new Button("Join Checkers Game");
+		Button button3 = new Button("View Information");
+		Button button4 = new Button("Exit");
+		
+		//add button listeners
+		button1.setOnAction(action -> {
+			//button1 - host a game
+			/* tells the program that you want the server.
+			 * sets connection information and attempts to
+			 * start a connection. 
+			 */
+			this.isServer = true;
+			this.connection = this.createServer();
+			window.setScene(this.sceneCheckers);
+			//will open a new window showing Host network info
+			this.createHostInfoWindow();
+			Platform.runLater(()->{
+	            try {
+	                connection.startConnection();
+	            } catch (Exception e) {
+	                e.printStackTrace();
+	            }
+	        });
+			connection.addListener(this);
+		});
+		button2.setOnAction(action -> {
+			//button2 - join a game
+			/* tells the program that you want a client
+			 * sets connection information and attempts to
+			 * start a connection. 
+			 */
+			this.isServer = false;
+			this.connection = 
+					this.createClientViaLauncer(this.textFieldHostIP.getText(), Integer.parseInt(this.textFieldHostPort.getText()));
+			window.setScene(this.sceneCheckers);
+			Platform.runLater(()->{
+	            try {
+	                connection.startConnection();
+	            } catch (Exception e) {
+	                e.printStackTrace();
+	            }
+	        });
+			connection.addListener(this);
+		});
+		button3.setOnAction(action -> {
+			//button3 - View Application information
+			
+			this.createGeneralInfoWindow();
+		});
+		button4.setOnAction(action -> {
+			//button4 - Exit game
+			System.exit(0);
+		});
+		
+		mb.getMenus().add(menu1);
+		
+		Label label1 = new Label("Host a game:");
+		Label label2 = new Label("Join a game - ");
+		Label label3 = new Label("Enter Host's IP address:");
+		Label label4 = new Label("Enter Hosts's Port number: ");
+		
+		VBox vb = new VBox(mb,
+				label1,
+				button1,
+				label2,
+				label3,
+				this.textFieldHostIP,
+				label4,
+				this.textFieldHostPort, 
+				button2, 
+				button3, 
+				button4
+		);	
+		this.sceneLauncher = new Scene(vb);
+    	
+    	/********************************
+    	 * Setting up Checkers game scene
+    	 ********************************/
+        this.sceneCheckers = new Scene(createContent());
+        
+        window.setScene(sceneLauncher);
+        window.setTitle("Checkers");
+        window.show();
 //        connection.send_data("WORKING IT IS MERLNI");
     }
+    
+    public void createHostInfoWindow() {
+    	//create a new window for host information
+    	Stage stageNetworkInfo = new Stage();
+    	stageNetworkInfo.setTitle("Host information");
+    	Label labelHost = new Label("Host IP Address:");
+    	//display information in textfields for easy copy and paste
+    	TextField textFieldHost = new TextField(Checkers.gHostIpAddress);
+    	textFieldHost.setEditable(false);
+    	Label labelPort = new Label("Host Port:");
+    	TextField textFieldPort = new TextField(Checkers.gHostPortNumber);
+    	textFieldPort.setEditable(false);
+    	VBox vbox = new VBox(labelHost, 
+    			textFieldHost, 
+    			labelPort, 
+    			textFieldPort
+    			);
+    	Scene sceneInfo = new Scene(vbox);
+    	stageNetworkInfo.setScene(sceneInfo);
+    	stageNetworkInfo.setHeight(125);
+    	stageNetworkInfo.setWidth(270);
+    	stageNetworkInfo.setResizable(false);
+    	stageNetworkInfo.show();
+    }
+    
+    public void createGeneralInfoWindow(){
+    	//create a new info to view app information (help and/or credits)
+	}
 
     public MyClient createClient(){
+    	/* method for creating a client using
+    	 * console input for IP and port values
+    	 */
         System.out.println("Please enter the ip address given by server");
         Scanner in = new Scanner(System.in);
         String host = in.nextLine();
@@ -116,6 +267,18 @@ public class Checkers extends Application implements MoveListener {
             });
         });
     }
+    
+    public MyClient createClientViaLauncer(String host, int port) {
+    	/* method to make it easier to create
+    	 * a client via launcher, to read in
+    	 * the host IP and port number at once.
+    	 */
+    	return new MyClient(host, port, data -> {
+            Platform.runLater(() -> {
+
+            });
+        });
+    }
 
     @Override
     public void stop() throws Exception {
@@ -123,6 +286,9 @@ public class Checkers extends Application implements MoveListener {
     }
 
     public MyServer createServer(){
+    	/* Return a server with a 
+    	 * default port value (first arg)
+    	 */
         return new MyServer(55555, data -> {
             Platform.runLater(() -> {
 
@@ -163,7 +329,6 @@ public class Checkers extends Application implements MoveListener {
         }
         return false;
     }
-
 
     public static void main(String[] args){
         launch(args);
