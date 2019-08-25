@@ -211,6 +211,7 @@ public class Checkers extends Application implements MoveListener {
 				button4
 		);	
 		this.sceneLauncher = new Scene(vb);
+		this.turn = this.isServer;
     	
     	/********************************
     	 * Setting up Checkers game scene
