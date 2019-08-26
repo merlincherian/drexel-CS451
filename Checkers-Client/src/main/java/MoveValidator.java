@@ -116,22 +116,26 @@ public class MoveValidator {
         //If starting space is null fail move attempt
         if(this.board[move.ystart][move.xstart] == null){
             move.valid = false;
+            return false;
         }
 
         //If player doesn't have a piece on start square fail move attempt
         if(!move.player.contains(this.board[move.ystart][move.xstart])){
             move.valid = false;
+            return false;
         }
 
         //If target space isn't empty fail move attempt
         if(this.board[move.yend][move.xend] != null){
              move.valid = false;
+            return false;
         }
 
         //Piece can only move backwards if it is a king
         if(isMoveBackwards(move.player, move.xstart, move.ystart, move.xend, move.yend)){
             if(!move.player.contains("k")){
                 move.valid = false;
+                return false;
             }
         }
 
@@ -141,13 +145,16 @@ public class MoveValidator {
             //If move isn't diagonal fail move attempt
             if(!diagonal(move.xstart, move.ystart, move.xend, move.yend)){
                 move.valid = false;
+                return false;
             }
         } else if (dist == 2){
             if(!checkJump(move)){
                 move.valid = false;
+                return false;
             }
         } else {
             move.valid = false;
+            return false;
         }
 
         return move.valid;
