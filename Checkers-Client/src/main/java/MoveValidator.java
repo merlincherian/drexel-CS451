@@ -136,15 +136,18 @@ public class MoveValidator {
         }
 
         //If jumping check square being jumped for opposite player color
-        if(Math.abs(move.xstart - move.xend) == 1){
+        int dist = Math.abs(move.xstart - move.xend);
+        if(dist == 1){
             //If move isn't diagonal fail move attempt
             if(!diagonal(move.xstart, move.ystart, move.xend, move.yend)){
                 move.valid = false;
             }
-        } else {
+        } else if (dist == 2){
             if(!checkJump(move)){
                 move.valid = false;
             }
+        } else {
+            move.valid = false;
         }
 
         return move.valid;

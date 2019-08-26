@@ -2,12 +2,15 @@ import javafx.event.EventHandler;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Ellipse;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,6 +23,7 @@ public class Piece extends StackPane {
     private double offsetX, offsetY;
     private double currX, currY;
     private boolean canMove;
+    private boolean isKing;
 
     public Piece(PieceType type, int x, int y, boolean isServer){
         this.type = type;
@@ -90,6 +94,9 @@ public class Piece extends StackPane {
                     if (hl.checkMove(move)) {
                         currX = e.getSceneX() - e.getX();
                         currY = e.getSceneY() - e.getY();
+                        Media media = new Media(Paths.get("src/main/resources/pieceMove.mp3").toUri().toString()); //replace /Movies/test.mp3 with your file
+                        MediaPlayer sound = new MediaPlayer(media);
+                        sound.play();
                     } else {
                         relocate(currX, currY);
                     }
