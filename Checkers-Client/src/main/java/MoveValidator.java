@@ -65,7 +65,7 @@ public class MoveValidator {
         String op;
 
         //Get opposite player
-        if(move.player.equals("r")){
+        if(move.player.contains("r")){
             op = "b";
         } else {
             op = "r";
