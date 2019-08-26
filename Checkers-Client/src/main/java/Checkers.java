@@ -315,6 +315,14 @@ public class Checkers extends Application implements MoveListener {
         }
     }
 
+    public void checkAndSetKing(String player, int yend, Piece piece){
+        if(player.contains("b") && yend == 0){
+            piece.setKing(true);
+        } else if(player.contains("r") && yend == 7){
+            piece.setKing(true);
+        }
+    }
+
     public boolean checkMove(MoveMessage move) {
         if(validator.validateMove(move)){
             validator.applyMove(move);
@@ -331,6 +339,7 @@ public class Checkers extends Application implements MoveListener {
                 } catch (Exception e){
                     System.out.println(e);
                 }
+                checkAndSetKing(move.player, move.yend, piece);
                 turn = !turn;
             } else {
                 Piece piece = get_tile(move.xstart, move.ystart).get_piece();
@@ -339,6 +348,7 @@ public class Checkers extends Application implements MoveListener {
                 start.set_piece(null);
                 Tile end = get_tile(move.xend, move.yend);
                 end.set_piece(piece);
+                checkAndSetKing(move.player, move.yend, piece);
                 turn = !turn;
             }
             if(move.jump){

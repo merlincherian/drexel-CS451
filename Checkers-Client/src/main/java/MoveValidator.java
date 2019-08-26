@@ -162,6 +162,11 @@ public class MoveValidator {
         @param yend, y value where move is going to
      */
     public void applyMove(MoveMessage move){
+        if(move.player.equals("b") && move.yend == 0){
+            move.player = "k" + move.player;
+        } else if (move.player.equals("r") && move.yend == 7){
+            move.player = "k" + move.player;
+        }
         this.board[move.ystart][move.xstart] = null;
 
         //if the move is a jump set the piece being jumped to null

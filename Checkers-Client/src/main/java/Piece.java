@@ -77,6 +77,9 @@ public class Piece extends StackPane {
 //            currX = e.getSceneX()- e.getX();
 //            currY = e.getSceneY() - e.getY();
                 String player = type.getColor();
+                if(this.isKing){
+                    player = "k" + player;
+                }
                 int ystart = (int) (offsetY) / 100;
                 int xstart = (int) (offsetX) / 100;
                 int xend = (int) (e.getSceneX()) / 100;
@@ -105,6 +108,16 @@ public class Piece extends StackPane {
 
     }
 
+    public void setKing(boolean bool){
+        Ellipse shape = (Ellipse) this.getChildren().get(0);
+        shape.setFill(Paint.valueOf("#FFD700"));
+        this.isKing = bool;
+    }
+
+    public boolean isKing(){
+        return this.isKing;
+    }
+
     public void move_piece(double x, double y) {
         currX = x * TILE_SIZE;
         currY = y * TILE_SIZE;
@@ -116,7 +129,7 @@ public class Piece extends StackPane {
     }
 
     public void setCanMove(boolean bool){
-        this.setDisable(bool);
+        this.setDisable(!bool);
         canMove = bool;
     }
 
