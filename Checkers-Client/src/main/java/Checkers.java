@@ -305,11 +305,11 @@ public class Checkers extends Application implements MoveListener {
         });
     }
 
-
     public void toggleCanMove(){
         for(int i = 0; i < this.pieces.getChildren().size(); i++){
             Piece cur = (Piece) pieces.getChildren().get(i);
-            if(cur.get_type().getColor().equals(color)){
+            String pieceColor = cur.get_type().getColor();
+            if(pieceColor.equals(color)){
                 cur.setCanMove(turn);
             }
         }
