@@ -116,6 +116,7 @@ public class Piece extends StackPane {
     }
 
     public void setCanMove(boolean bool){
+        this.setDisable(bool);
         canMove = bool;
     }
 
