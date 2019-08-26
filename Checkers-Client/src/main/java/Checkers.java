@@ -305,15 +305,57 @@ public class Checkers extends Application implements MoveListener {
         });
     }
 
-
     public void toggleCanMove(){
         for(int i = 0; i < this.pieces.getChildren().size(); i++){
             Piece cur = (Piece) pieces.getChildren().get(i);
-            if(cur.get_type().getColor().equals(color)){
+            String pieceColor = cur.get_type().getColor();
+            if(pieceColor.equals(color)){
                 cur.setCanMove(turn);
             }
         }
     }
+
+public void checkAndSetKing(String player, int yend, Piece piece) {
+    if (player.contains("b") && yend == 0) {
+        piece.setKing(true);
+    } else if (player.contains("r") && yend == 7) {
+        piece.setKing(true);
+    }
+}
+
+public void isWin() {
+    int blackPieces = 0;
+    int redPieces = 0;
+    for (int i = 0; i < this.pieces.getChildren().size(); i++) {
+        Piece cur = (Piece) pieces.getChildren().get(i);
+        String pieceColor = cur.get_type().getColor();
+        Boolean isVisible = cur.isVisible();
+        if (pieceColor.equals('b')) {
+            if (isVisible) {
+                blackPieces++;
+            }
+        } else {
+            if (isVisible) {
+                redPieces++;
+            }
+
+        }
+    }
+    if (redPieces == 0 || blackPieces == 0) {
+        if (isServer && blackPieces == 0) {
+            System.out.println("YOU SERVER WON!");
+        }
+        if (isServer && redPieces == 0) {
+            System.out.println("OPPONENT WON!");
+        }
+        if (!isServer && redPieces == 0) {
+            System.out.println("YOU CLIENT WON!");
+        }
+        if (!isServer && blackPieces == 0) {
+            System.out.println("OPPONENT WON!");
+        }
+    }
+}
 
     public boolean checkMove(MoveMessage move) {
         if(validator.validateMove(move)){
@@ -331,6 +373,7 @@ public class Checkers extends Application implements MoveListener {
                 } catch (Exception e){
                     System.out.println(e);
                 }
+                checkAndSetKing(move.player, move.yend, piece);
                 turn = !turn;
             } else {
                 Piece piece = get_tile(move.xstart, move.ystart).get_piece();
@@ -339,6 +382,7 @@ public class Checkers extends Application implements MoveListener {
                 start.set_piece(null);
                 Tile end = get_tile(move.xend, move.yend);
                 end.set_piece(piece);
+                checkAndSetKing(move.player, move.yend, piece);
                 turn = !turn;
             }
             if(move.jump){
