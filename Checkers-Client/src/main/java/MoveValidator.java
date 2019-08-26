@@ -76,7 +76,7 @@ public class MoveValidator {
 
         String midPoint = this.board[yjump][xjump];
         if(midPoint != null){
-            if(midPoint.equals(op)){
+            if(midPoint.contains(op)){
                 move.jump = true;
                 move.yjump = yjump;
                 move.xjump = xjump;
@@ -119,7 +119,7 @@ public class MoveValidator {
         }
 
         //If player doesn't have a piece on start square fail move attempt
-        if(!this.board[move.ystart][move.xstart].equals(move.player)){
+        if(!move.player.contains(this.board[move.ystart][move.xstart])){
             move.valid = false;
         }
 
@@ -162,9 +162,9 @@ public class MoveValidator {
         @param yend, y value where move is going to
      */
     public void applyMove(MoveMessage move){
-        if(move.player.contains("b") && move.yend == 0){
+        if(move.player.equals("b") && move.yend == 0){
             move.player = "k" + move.player;
-        } else if (move.player.contains("r") && move.yend == 7){
+        } else if (move.player.equals("r") && move.yend == 7){
             move.player = "k" + move.player;
         }
         this.board[move.ystart][move.xstart] = null;
