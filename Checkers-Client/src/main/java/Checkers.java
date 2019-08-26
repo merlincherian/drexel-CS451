@@ -315,13 +315,47 @@ public class Checkers extends Application implements MoveListener {
         }
     }
 
-    public void checkAndSetKing(String player, int yend, Piece piece){
-        if(player.contains("b") && yend == 0){
-            piece.setKing(true);
-        } else if(player.contains("r") && yend == 7){
-            piece.setKing(true);
+public void checkAndSetKing(String player, int yend, Piece piece) {
+    if (player.contains("b") && yend == 0) {
+        piece.setKing(true);
+    } else if (player.contains("r") && yend == 7) {
+        piece.setKing(true);
+    }
+}
+
+public void isWin() {
+    int blackPieces = 0;
+    int redPieces = 0;
+    for (int i = 0; i < this.pieces.getChildren().size(); i++) {
+        Piece cur = (Piece) pieces.getChildren().get(i);
+        String pieceColor = cur.get_type().getColor();
+        Boolean isVisible = cur.isVisible();
+        if (pieceColor.equals('b')) {
+            if (isVisible) {
+                blackPieces++;
+            }
+        } else {
+            if (isVisible) {
+                redPieces++;
+            }
+
         }
     }
+    if (redPieces == 0 || blackPieces == 0) {
+        if (isServer && blackPieces == 0) {
+            System.out.println("YOU SERVER WON!");
+        }
+        if (isServer && redPieces == 0) {
+            System.out.println("OPPONENT WON!");
+        }
+        if (!isServer && redPieces == 0) {
+            System.out.println("YOU CLIENT WON!");
+        }
+        if (!isServer && blackPieces == 0) {
+            System.out.println("OPPONENT WON!");
+        }
+    }
+}
 
     public boolean checkMove(MoveMessage move) {
         if(validator.validateMove(move)){
