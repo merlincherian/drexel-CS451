@@ -164,7 +164,6 @@ public class Checkers extends Application implements MoveListener {
         return false;
     }
 
-
     public static void main(String[] args){
         launch(args);
     }
