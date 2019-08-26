@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="src" path="Checkers-Client/src/main/java"/>
+	<classpathentry kind="lib" path="Checkers-Client/gradle/wrapper/gradle-wrapper.jar"/>
+	<classpathentry kind="output" path="Checkers-Client/build/classes/java/main"/>
+</classpath>

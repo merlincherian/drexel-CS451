@@ -13,7 +13,6 @@ public class MyClient extends NetworkConnection {
         this.port = port;
     }
 
-
     @Override
     protected boolean isServer() {
         return false;

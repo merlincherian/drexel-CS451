@@ -13,6 +13,8 @@ public class MyServer extends NetworkConnection {
         super(onReceiveCallBack);
         try {
             System.out.println(InetAddress.getLocalHost().getHostAddress());
+            Checkers.gHostIpAddress = InetAddress.getLocalHost().getHostAddress();
+            Checkers.gHostPortNumber = Integer.toString(port);
         } catch (UnknownHostException e) {
             e.printStackTrace();
         } catch (Exception e) {
