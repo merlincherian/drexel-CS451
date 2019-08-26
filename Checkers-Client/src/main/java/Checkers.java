@@ -130,6 +130,16 @@ public class Checkers extends Application implements MoveListener {
         });
     }
 
+
+    public void toggleCanMove(){
+        for(int i = 0; i < this.pieces.getChildren().size(); i++){
+            Piece cur = (Piece) pieces.getChildren().get(i);
+            if(cur.get_type().getColor().equals(color)){
+                cur.setCanMove(turn);
+            }
+        }
+    }
+
     public boolean checkMove(MoveMessage move) {
         if(validator.validateMove(move)){
             validator.applyMove(move);
@@ -159,6 +169,7 @@ public class Checkers extends Application implements MoveListener {
             if(move.jump){
                 remove_piece(move.xjump, move.yjump);
             }
+            toggleCanMove();
             return true;
         }
         return false;
