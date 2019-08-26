@@ -368,12 +368,12 @@ public void isWin() {
                 start.set_piece(null);
                 Tile end = get_tile(move.xend, move.yend);
                 end.set_piece(piece);
+                checkAndSetKing(move.player, move.yend, piece);
                 try {
                     connection.send(move);
                 } catch (Exception e){
                     System.out.println(e);
                 }
-                checkAndSetKing(move.player, move.yend, piece);
                 turn = !turn;
             } else {
                 Piece piece = get_tile(move.xstart, move.ystart).get_piece();
