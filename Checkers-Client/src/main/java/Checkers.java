@@ -240,14 +240,21 @@ public class Checkers extends Application implements MoveListener {
     	Label labelPort = new Label("Host Port:");
     	TextField textFieldPort = new TextField(Checkers.gHostPortNumber);
     	textFieldPort.setEditable(false);
+    	Button button1 = new Button("Exit Game");
+    	button1.setOnAction(action -> {
+			//button4 - Exit game
+			System.exit(0);
+		});
     	VBox vbox = new VBox(labelHost, 
     			textFieldHost, 
     			labelPort, 
-    			textFieldPort
+    			textFieldPort,
+    			new Label("\n"),
+    			button1
     			);
     	Scene sceneInfo = new Scene(vbox);
     	stageNetworkInfo.setScene(sceneInfo);
-    	stageNetworkInfo.setHeight(125);
+    	stageNetworkInfo.setHeight(185);
     	stageNetworkInfo.setWidth(270);
     	stageNetworkInfo.setResizable(false);
     	stageNetworkInfo.show();
@@ -260,7 +267,13 @@ public class Checkers extends Application implements MoveListener {
     	Label label = new Label("Joined game at " + this.s);
     	Label label1 = new Label("Using port: " + this.p);
     	
-    	VBox vbox = new VBox(label, label1);
+    	Button button1 = new Button("Exit Game");
+    	button1.setOnAction(action -> {
+			//button4 - Exit game
+			System.exit(0);
+		});
+    	
+    	VBox vbox = new VBox(label, label1, new Label("\n"), button1);
     	Scene scene = new Scene(vbox);
     	stageClientInfo.setScene(scene);
     	stageClientInfo.setHeight(125);
