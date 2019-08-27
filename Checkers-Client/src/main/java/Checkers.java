@@ -213,8 +213,8 @@ public class Checkers extends Application implements MoveListener {
 				this.textFieldHostIP,
 				label4,
 				this.textFieldHostPort, 
-				new Label("\n"),
 				button2, 
+				new Label("\n"),
 				button3, 
 				button4
 		);	
