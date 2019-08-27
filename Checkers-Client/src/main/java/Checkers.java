@@ -373,7 +373,7 @@ public void isWin() {
             }
         } else {
             if (isVisible) {
-//                redPieces += 1;
+                 redPieces += 1;
             }
 
         }
@@ -388,13 +388,13 @@ public void isWin() {
             alert.showAndWait();
         }
         if (isServer && blackPieces == 0) {
-            System.out.println("WHITE WINS!");
-            alert.setContentText("WHITE WINS!");
+            System.out.println("RED WINS!");
+            alert.setContentText("RED WINS!");
             alert.showAndWait();
         }
         if (!isServer && blackPieces == 0) {
-            System.out.println("wHITE WINS!");
-            alert.setContentText("WHITE WINS!");
+            System.out.println("RED WINS!");
+            alert.setContentText("RED WINS!");
             alert.showAndWait();
         }
         if (!isServer && redPieces == 0) {
