@@ -1,7 +1,6 @@
-package test.java;
-
 import org.junit.Test;
-import sun.plugin2.message.OverlayWindowMoveMessage;
+
+import static junit.framework.TestCase.assertTrue;
 
 
 public class ValidatorTest {
@@ -22,6 +21,6 @@ public class ValidatorTest {
         MoveMessage move = new MoveMessage("b",3,4,1,2 );
         assertTrue(mv.validateMove(move));
         assertTrue(move.valid && move.jump);
-        assertEquals(move.xjump == 2 && move.yjump ==3);
+        assertTrue(move.xjump == 2 && move.yjump ==3);
     }
 }
