@@ -7,12 +7,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuBar;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -337,51 +332,34 @@ public void isWin() {
             }
         } else {
             if (isVisible) {
-                redPieces += 1;
+//                redPieces += 1;
             }
 
         }
     }
+    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+    alert.setTitle("Checkers");
+    alert.setHeaderText("Game Ended");
     if (redPieces == 0 || blackPieces == 0) {
         if (isServer && redPieces == 0) {
             System.out.println("BLACK WON!");
-            Label label = new Label("BLACK WINS!");
-            Popup popup = new Popup();
-            label.setStyle(" -fx-background-color: white;");
-            label.setMinWidth(80);
-            label.setMinHeight(50);
-            popup.getContent().add(label);
-            popup.show(window);
+            alert.setContentText("BLACK WINS!");
+            alert.showAndWait();
         }
         if (isServer && blackPieces == 0) {
             System.out.println("WHITE WINS!");
-            Label label = new Label("WHITE WINS!");
-            Popup popup = new Popup();
-            label.setStyle(" -fx-background-color: white;");
-            label.setMinWidth(80);
-            label.setMinHeight(50);
-            popup.getContent().add(label);
-            popup.show(window);
+            alert.setContentText("WHITE WINS!");
+            alert.showAndWait();
         }
         if (!isServer && blackPieces == 0) {
             System.out.println("wHITE WINS!");
-            Label label = new Label("WHITE WINS!");
-            Popup popup = new Popup();
-            label.setStyle(" -fx-background-color: white;");
-            label.setMinWidth(80);
-            label.setMinHeight(50);
-            popup.getContent().add(label);
-            popup.show(window);
+            alert.setContentText("WHITE WINS!");
+            alert.showAndWait();
         }
         if (!isServer && redPieces == 0) {
             System.out.println("BLACK WON!");
-            Label label = new Label("BLACK WINS!");
-            Popup popup = new Popup();
-            label.setStyle(" -fx-background-color: white;");
-            label.setMinWidth(80);
-            label.setMinHeight(50);
-            popup.getContent().add(label);
-            popup.show(window);
+            alert.setContentText("BLACK WINS!");
+            alert.showAndWait();
         }
     }
 }
