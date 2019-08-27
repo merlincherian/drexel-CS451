@@ -28,7 +28,8 @@ public class Checkers extends Application implements MoveListener {
     
     //uses a ternary operation to create a host or guest session on start up
     //private NetworkConnection connection = isServer? createServer(): createClient();
-    private NetworkConnection connection;
+    
+    private NetworkConnection connection; 
     
     public static String gHostIpAddress, gHostPortNumber;
 
@@ -53,7 +54,7 @@ public class Checkers extends Application implements MoveListener {
     private Parent createContent(){
     	/* creates initial checkerboard w/ tiles
     	 */
-    	System.out.print("isServer: " + this.isServer);
+    	//System.out.print("isServer: " + this.isServer);
         Pane root = new Pane();
         root.setPrefSize(WIDTH*TILE_SIZE, HEIGHT*TILE_SIZE);
         root.getChildren().addAll(tiles, pieces);
@@ -83,7 +84,6 @@ public class Checkers extends Application implements MoveListener {
     }
 
     private Piece create_piece(PieceType type, int x, int y, boolean isServer) {
-
         Piece piece = new Piece(type, x, y, isServer);
         return piece;
     }
@@ -185,6 +185,7 @@ public class Checkers extends Application implements MoveListener {
 	                e.printStackTrace();
 	            }
 	        });
+			this.createClientInfoWindow();
 			connection.addListener(this);
 		});
 		button3.setOnAction(action -> {
@@ -229,7 +230,7 @@ public class Checkers extends Application implements MoveListener {
     public void createHostInfoWindow() {
     	//create a new window for host information
     	Stage stageNetworkInfo = new Stage();
-    	stageNetworkInfo.setTitle("Host information");
+    	stageNetworkInfo.setTitle("Host Information");
     	Label labelHost = new Label("Host IP Address:");
     	//display information in textfields for easy copy and paste
     	TextField textFieldHost = new TextField(Checkers.gHostIpAddress);
@@ -248,6 +249,22 @@ public class Checkers extends Application implements MoveListener {
     	stageNetworkInfo.setWidth(270);
     	stageNetworkInfo.setResizable(false);
     	stageNetworkInfo.show();
+    }
+    
+    public void createClientInfoWindow() {
+    	//create a window displaying info for when client joins a game
+    	Stage stageClientInfo = new Stage();
+    	stageClientInfo.setTitle("Client Information");
+    	Label label = new Label("Joined game at " + this.textFieldHostIP.toString());
+    	Label label1 = new Label("Using port: " + this.textFieldHostPort.toString());
+    	
+    	VBox vbox = new VBox(label, label1);
+    	Scene scene = new Scene(vbox);
+    	stageClientInfo.setScene(scene);
+    	stageClientInfo.setHeight(125);
+    	stageClientInfo.setWidth(270);
+    	stageClientInfo.setResizable(false);
+    	stageClientInfo.show();
     }
     
     public void createGeneralInfoWindow(){
