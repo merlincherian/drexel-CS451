@@ -48,6 +48,7 @@ public class Checkers extends Application implements MoveListener {
     //public TextFields for button access
   	public TextField textFieldHostIP = new TextField();
   	public TextField textFieldHostPort = new TextField();
+  	private String s, p;
   	Stage window;
 	Scene sceneLauncher, sceneCheckers;
 
@@ -77,7 +78,6 @@ public class Checkers extends Application implements MoveListener {
                     pieces.getChildren().add(piece);
                     piece.addListener(this);
                 }
-
             }
         }
         return root;
@@ -255,8 +255,8 @@ public class Checkers extends Application implements MoveListener {
     	//create a window displaying info for when client joins a game
     	Stage stageClientInfo = new Stage();
     	stageClientInfo.setTitle("Client Information");
-    	Label label = new Label("Joined game at " + this.textFieldHostIP.toString());
-    	Label label1 = new Label("Using port: " + this.textFieldHostPort.toString());
+    	Label label = new Label("Joined game at " + this.s);
+    	Label label1 = new Label("Using port: " + this.p);
     	
     	VBox vbox = new VBox(label, label1);
     	Scene scene = new Scene(vbox);
@@ -314,6 +314,8 @@ public class Checkers extends Application implements MoveListener {
     	 * a client via launcher, to read in
     	 * the host IP and port number at once.
     	 */
+    	this.s = host;
+    	this.p = Integer.toString(port);
     	return new MyClient(host, port, data -> {
             Platform.runLater(() -> {
 
