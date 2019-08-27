@@ -252,6 +252,26 @@ public class Checkers extends Application implements MoveListener {
     
     public void createGeneralInfoWindow(){
     	//create a new info to view app information (help and/or credits)
+    	String info = 
+    			"This application allows two people to play a game of Checkers together."
+    			+ "\n\nTo move pieces, click and drag your pieces to the desired space."
+    			+ "\nIf you place a piece over an occupied space or backwards when it's not a king, "
+    			+ "then the piece will return to its original position."
+    			+ "\n\nThe game ends when one of the players wins.";
+    	Stage infoStage = new Stage();
+    	Label label1 = new Label(info);
+    	label1.setWrapText(true);
+    	label1.setPrefWidth(395);
+    	
+    	VBox vbox = new VBox(label1);
+    	Scene scene = new Scene(vbox);
+    	
+    	infoStage.setScene(scene);
+    	infoStage.setTitle("Information");
+    	infoStage.setHeight(200);
+    	infoStage.setWidth(400);
+    	infoStage.setResizable(false);
+    	infoStage.show();
 	}
 
     public MyClient createClient(){
