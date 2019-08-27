@@ -2,6 +2,7 @@ import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Orientation;
 import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
@@ -200,7 +201,7 @@ public class Checkers extends Application implements MoveListener {
 		mb.getMenus().add(menu1);
 		
 		Label label1 = new Label("Host a game:");
-		Label label2 = new Label("Join a game - ");
+		Label label2 = new Label("\nJoin a game - ");
 		Label label3 = new Label("Enter Host's IP address:");
 		Label label4 = new Label("Enter Hosts's Port number: ");
 		
@@ -212,6 +213,7 @@ public class Checkers extends Application implements MoveListener {
 				this.textFieldHostIP,
 				label4,
 				this.textFieldHostPort, 
+				new Label("\n"),
 				button2, 
 				button3, 
 				button4
