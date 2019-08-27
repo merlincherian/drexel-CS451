@@ -19,6 +19,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Paint;
+import javafx.stage.Popup;
 import javafx.stage.Stage;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -343,16 +344,44 @@ public void isWin() {
     }
     if (redPieces == 0 || blackPieces == 0) {
         if (isServer && redPieces == 0) {
-            System.out.println("YOU SERVER WON!");
+            System.out.println("BLACK WON!");
+            Label label = new Label("BLACK WINS!");
+            Popup popup = new Popup();
+            label.setStyle(" -fx-background-color: white;");
+            label.setMinWidth(80);
+            label.setMinHeight(50);
+            popup.getContent().add(label);
+            popup.show(window);
         }
         if (isServer && blackPieces == 0) {
-            System.out.println("OPPONENT WON!");
+            System.out.println("WHITE WINS!");
+            Label label = new Label("WHITE WINS!");
+            Popup popup = new Popup();
+            label.setStyle(" -fx-background-color: white;");
+            label.setMinWidth(80);
+            label.setMinHeight(50);
+            popup.getContent().add(label);
+            popup.show(window);
         }
         if (!isServer && blackPieces == 0) {
-            System.out.println("YOU CLIENT WON!");
+            System.out.println("wHITE WINS!");
+            Label label = new Label("WHITE WINS!");
+            Popup popup = new Popup();
+            label.setStyle(" -fx-background-color: white;");
+            label.setMinWidth(80);
+            label.setMinHeight(50);
+            popup.getContent().add(label);
+            popup.show(window);
         }
         if (!isServer && redPieces == 0) {
-            System.out.println("OPPONENT WON!");
+            System.out.println("BLACK WON!");
+            Label label = new Label("BLACK WINS!");
+            Popup popup = new Popup();
+            label.setStyle(" -fx-background-color: white;");
+            label.setMinWidth(80);
+            label.setMinHeight(50);
+            popup.getContent().add(label);
+            popup.show(window);
         }
     }
 }
